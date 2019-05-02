@@ -111,7 +111,15 @@ func (cfg *Config) normalize() error {
 		case "unix":
 			cfg.Addr = "/tmp/mysql.sock"
 		default:
-			return errors.New("default addr for network '" + cfg.Net + "' unknown")
+			//cfg.Addr = cfg.Net
+			//cfg.Net = "tcp"
+			if strings.Contains(cfg.Net, ":") {
+				cfg.Addr = cfg.Net
+				cfg.Net = "tcp"
+			}else{
+				return errors.New("default addr for network '" + cfg.Net + "' unknown")
+			}
+
 		}
 
 	} else if cfg.Net == "tcp" {
@@ -449,7 +457,7 @@ func parseDSNParams(cfg *Config, params string) (err error) {
 				return errors.New("invalid bool value: " + value)
 			}
 
-		// Use cleartext authentication mode (MySQL 5.5.10+)
+			// Use cleartext authentication mode (MySQL 5.5.10+)
 		case "allowCleartextPasswords":
 			var isBool bool
 			cfg.AllowCleartextPasswords, isBool = readBool(value)
@@ -457,7 +465,7 @@ func parseDSNParams(cfg *Config, params string) (err error) {
 				return errors.New("invalid bool value: " + value)
 			}
 
-		// Use native password authentication
+			// Use native password authentication
 		case "allowNativePasswords":
 			var isBool bool
 			cfg.AllowNativePasswords, isBool = readBool(value)
@@ -465,7 +473,7 @@ func parseDSNParams(cfg *Config, params string) (err error) {
 				return errors.New("invalid bool value: " + value)
 			}
 
-		// Use old authentication mode (pre MySQL 4.1)
+			// Use old authentication mode (pre MySQL 4.1)
 		case "allowOldPasswords":
 			var isBool bool
 			cfg.AllowOldPasswords, isBool = readBool(value)
@@ -473,7 +481,7 @@ func parseDSNParams(cfg *Config, params string) (err error) {
 				return errors.New("invalid bool value: " + value)
 			}
 
-		// Switch "rowsAffected" mode
+			// Switch "rowsAffected" mode
 		case "clientFoundRows":
 			var isBool bool
 			cfg.ClientFoundRows, isBool = readBool(value)
@@ -481,7 +489,7 @@ func parseDSNParams(cfg *Config, params string) (err error) {
 				return errors.New("invalid bool value: " + value)
 			}
 
-		// Collation
+			// Collation
 		case "collation":
 			cfg.Collation = value
 			break
@@ -493,11 +501,11 @@ func parseDSNParams(cfg *Config, params string) (err error) {
 				return errors.New("invalid bool value: " + value)
 			}
 
-		// Compression
+			// Compression
 		case "compress":
 			return errors.New("compression not implemented yet")
 
-		// Enable client side placeholder substitution
+			// Enable client side placeholder substitution
 		case "interpolateParams":
 			var isBool bool
 			cfg.InterpolateParams, isBool = readBool(value)
@@ -505,7 +513,7 @@ func parseDSNParams(cfg *Config, params string) (err error) {
 				return errors.New("invalid bool value: " + value)
 			}
 
-		// Time Location
+			// Time Location
 		case "loc":
 			if value, err = url.QueryUnescape(value); err != nil {
 				return
@@ -515,7 +523,7 @@ func parseDSNParams(cfg *Config, params string) (err error) {
 				return
 			}
 
-		// multiple statements in one query
+			// multiple statements in one query
 		case "multiStatements":
 			var isBool bool
 			cfg.MultiStatements, isBool = readBool(value)
@@ -523,7 +531,7 @@ func parseDSNParams(cfg *Config, params string) (err error) {
 				return errors.New("invalid bool value: " + value)
 			}
 
-		// time.Time parsing
+			// time.Time parsing
 		case "parseTime":
 			var isBool bool
 			cfg.ParseTime, isBool = readBool(value)
@@ -531,14 +539,14 @@ func parseDSNParams(cfg *Config, params string) (err error) {
 				return errors.New("invalid bool value: " + value)
 			}
 
-		// I/O read Timeout
+			// I/O read Timeout
 		case "readTimeout":
 			cfg.ReadTimeout, err = time.ParseDuration(value)
 			if err != nil {
 				return
 			}
 
-		// Reject read-only connections
+			// Reject read-only connections
 		case "rejectReadOnly":
 			var isBool bool
 			cfg.RejectReadOnly, isBool = readBool(value)
@@ -546,7 +554,7 @@ func parseDSNParams(cfg *Config, params string) (err error) {
 				return errors.New("invalid bool value: " + value)
 			}
 
-		// Server public key
+			// Server public key
 		case "serverPubKey":
 			name, err := url.QueryUnescape(value)
 			if err != nil {
@@ -560,18 +568,18 @@ func parseDSNParams(cfg *Config, params string) (err error) {
 				return errors.New("invalid value / unknown server pub key name: " + name)
 			}
 
-		// Strict mode
+			// Strict mode
 		case "strict":
 			panic("strict mode has been removed. See https://github.com/go-sql-driver/mysql/wiki/strict-mode")
 
-		// Dial Timeout
+			// Dial Timeout
 		case "timeout":
 			cfg.Timeout, err = time.ParseDuration(value)
 			if err != nil {
 				return
 			}
 
-		// TLS-Encryption
+			// TLS-Encryption
 		case "tls":
 			boolValue, isBool := readBool(value)
 			if isBool {
@@ -598,7 +606,7 @@ func parseDSNParams(cfg *Config, params string) (err error) {
 				}
 			}
 
-		// I/O write Timeout
+			// I/O write Timeout
 		case "writeTimeout":
 			cfg.WriteTimeout, err = time.ParseDuration(value)
 			if err != nil {
