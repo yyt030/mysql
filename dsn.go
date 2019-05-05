@@ -113,10 +113,10 @@ func (cfg *Config) normalize() error {
 		default:
 			//cfg.Addr = cfg.Net
 			//cfg.Net = "tcp"
-			if strings.Contains(cfg.Net, ":") {
+			if strings.Contains(cfg.Net, ":") || strings.Contains(cfg.Net, ".") {
 				cfg.Addr = cfg.Net
 				cfg.Net = "tcp"
-			}else{
+			} else {
 				return errors.New("default addr for network '" + cfg.Net + "' unknown")
 			}
 
