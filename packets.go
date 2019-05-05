@@ -380,9 +380,9 @@ func (mc *mysqlConn) writeHandshakeResponsePacket(authResp []byte, plugin string
 		pos++
 	}
 
-	pos += copy(data[pos:], plugin)
-	data[pos] = 0x00
-	pos++
+	//pos += copy(data[pos:], plugin)
+	//data[pos] = 0x00
+	//pos++
 
 	// Send Auth packet
 	return mc.writePacket(data[:pos])
